@@ -27,9 +27,10 @@ public class ProductRestController {
 	
 	@RequestMapping(value="/products", method=RequestMethod.POST)
 	public Product create(@RequestBody Product product) {
-		//Obtener el cupon de descuento del otro microservicio
+		//Obtener el cupon de descuento del otro microservicio; CouponCode es SUPERSALE en body de postman.
+		//couponServiceURL + product.getCouponCode() es lo mismoq http://localhost:9091/couponapi/coupons/SUPERSALE, para obtener el cupon en postman
 		Coupon coupon = restTemplate.getForObject(couponServiceURL + product.getCouponCode(), Coupon.class);  //se crea un Coupon en package dto, con los mismos atributos de la clase modelo del otro servicio
-		product.setPrice(product.getPrice().subtract(coupon.getDiscount()));
+		product.setPrice(product.getPrice().subtract(coupon.getDiscount())); //operacion aritmetica para aplicar descuento al precio
 		return repo.save(product);
 		
 	}
